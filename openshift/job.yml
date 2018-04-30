@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: csv2db-job-1
+spec:
+  parallelism: 1
+  completions: 1
+  template:
+    spec:
+      containers:
+      - name: spring-batch
+        env:
+        - name: SPRING_CONFIG_LOCATION
+          value: /config/batch.properties
+        image: 172.30.1.1:5000/batch/csv2db-batch-ocp:1.0
+        command: ["java", "-jar", "/deployments/csv2db-batch-ocp-1.0.jar", "importUserJob", "jobFileLocation=/test/myfile1.csv", "batchRun=1"]
+        volumeMounts:
+        - mountPath: /test
+          name: test
+        - mountPath: /config
+          name: config
+      volumes:
+      - name: test
+        persistentVolumeClaim:
+          claimName: spring-batch-claim
+      - name: config
+        configMap:
+          name: batch-config
+      restartPolicy: Never

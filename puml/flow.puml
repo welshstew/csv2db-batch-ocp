@@ -1,0 +1,27 @@
+@startuml
+actor Operator
+collections openshiftAPI
+collections kubejob_springjob_csv2db
+collections kubejob_createcsv
+database shared_pv
+database postgreSQL
+
+Operator -> openshiftAPI: create csv2db job
+openshiftAPI -> kubejob_springjob_csv2db:instantiate()
+activate kubejob_springjob_csv2db
+kubejob_springjob_csv2db -> openshiftAPI: step 1: create kubejob_createcsv()
+openshiftAPI -> kubejob_createcsv: runJob(createCsv)
+activate kubejob_createcsv
+kubejob_createcsv -> shared_pv: writeCsv
+shared_pv -> kubejob_createcsv: done
+kubejob_createcsv -> kubejob_createcsv: Exit(0)
+kubejob_createcsv -> openshiftAPI: done
+deactivate kubejob_createcsv
+openshiftAPI -> kubejob_springjob_csv2db: done
+kubejob_springjob_csv2db -> kubejob_springjob_csv2db: step 2: read/process/write
+kubejob_springjob_csv2db -> shared_pv: read()
+kubejob_springjob_csv2db -> kubejob_springjob_csv2db: process(transform)
+kubejob_springjob_csv2db -> postgreSQL: writeRows()
+kubejob_springjob_csv2db -> kubejob_springjob_csv2db: Exit(0)
+deactivate kubejob_springjob_csv2db
+@enduml

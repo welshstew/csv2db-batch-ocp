@@ -1,0 +1,20 @@
+{
+  "apiVersion": "v1",
+  "kind": "PersistentVolumeClaim",
+  "metadata": {
+    "name": "spring-batch-claim",
+    "labels": {
+      "application": "spring-batch"
+    }
+  },
+  "spec": {
+    "accessModes": [
+      "ReadWriteMany"
+    ],
+    "resources": {
+      "requests": {
+        "storage": "512Mi"
+      }
+    }
+  }
+}
