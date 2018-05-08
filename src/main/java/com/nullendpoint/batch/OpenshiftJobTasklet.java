@@ -1,9 +1,6 @@
 package com.nullendpoint.batch;
 
-import io.fabric8.kubernetes.api.model.EnvVar;
-import io.fabric8.kubernetes.api.model.EnvVarBuilder;
-import io.fabric8.kubernetes.api.model.Job;
-import io.fabric8.kubernetes.api.model.JobBuilder;
+import io.fabric8.kubernetes.api.model.*;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -77,6 +74,7 @@ public class OpenshiftJobTasklet implements Tasklet {
 
             Job aJob = null;
 
+
             if(envVars != null){
                 aJob = new JobBuilder()
                         .withNewMetadata().withName(jobName).addToLabels("job-name", jobName).endMetadata()
@@ -87,6 +85,12 @@ public class OpenshiftJobTasklet implements Tasklet {
                         .withRestartPolicy("Never")
                         .addNewContainer().withName(jobName).withImage(imageName)
                         .withCommand(command)
+                        .withNewResources()
+                            .addToRequests("cpu", new Quantity("100m"))
+                            .addToRequests("memory", new Quantity("128Mi"))
+                            .addToLimits("cpu", new Quantity("100m"))
+                            .addToLimits("memory", new Quantity("128Mi"))
+                        .endResources()
                         .withVolumeMounts()
                         .addNewVolumeMount()
                         .withName("test")
@@ -111,6 +115,12 @@ public class OpenshiftJobTasklet implements Tasklet {
                         .withRestartPolicy("Never")
                         .addNewContainer().withName(jobName).withImage(imageName)
                         .withCommand(command)
+                        .withNewResources()
+                            .addToRequests("cpu", new Quantity("100m"))
+                            .addToRequests("memory", new Quantity("128Mi"))
+                            .addToLimits("cpu", new Quantity("100m"))
+                            .addToLimits("memory", new Quantity("128Mi"))
+                        .endResources()
                         .withVolumeMounts()
                         .addNewVolumeMount()
                         .withName("test")

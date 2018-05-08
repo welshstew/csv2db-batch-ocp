@@ -83,6 +83,13 @@ spec:
           value: /config/batch.properties
         image: 172.30.1.1:5000/batch/csv2db-batch-ocp:1.0
         command: ["java", "-jar", "/deployments/csv2db-batch-ocp-1.0.jar", "importUserJob", "jobFileLocation=/test/myfile1.csv", "batchRun=1"]
+        resources:
+          limits:
+            cpu: 300m
+            memory: 512Mi
+          requests:
+            cpu: 300m
+            memory: 512Mi        
         volumeMounts:
         - mountPath: /test
           name: test
@@ -114,7 +121,7 @@ java.net.ProtocolException: Expected HTTP 101 response but was '403 Forbidden'
 	at java.lang.Thread.run(Thread.java:748) [na:1.8.0_161]
 ```
 
-We need to fix this by applying the correct permissions to allow this user to watch pods, and also be able to create jobs in this namesapce.
+We need to fix this by applying the correct permissions to allow this user to watch pods, and also be able to create jobs in this namespace.
 
 ```text
 oc delete job/csv2db-job-1
@@ -138,6 +145,13 @@ spec:
           value: /config/batch.properties
         image: 172.30.1.1:5000/batch/csv2db-batch-ocp:1.0
         command: ["java", "-jar", "/deployments/csv2db-batch-ocp-1.0.jar", "importUserJob", "jobFileLocation=/test/myfile2.csv", "batchRun=2"]
+        resources:
+          limits:
+            cpu: 300m
+            memory: 512Mi
+          requests:
+            cpu: 300m
+            memory: 512Mi        
         volumeMounts:
         - mountPath: /test
           name: test
@@ -280,6 +294,13 @@ spec:
           value: /config/batch.properties
         image: 172.30.1.1:5000/batch/csv2db-batch-ocp:1.0
         command: ["java", "-jar", "/deployments/csv2db-batch-ocp-1.0.jar", "importUserJob", "jobFileLocation=/test/myfile3.csv", "batchRun=3"]
+        resources:
+          limits:
+            cpu: 300m
+            memory: 512Mi
+          requests:
+            cpu: 300m
+            memory: 512Mi
         volumeMounts:
         - mountPath: /test
           name: test
